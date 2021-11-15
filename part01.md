@@ -74,6 +74,7 @@ Danceability over genre would for example look like this.
 
 ### Content-based recommender system
 *See notebook: content_based.ipynb*
+
 By using a user’s playlist and applying the correct features by the songs we had available we can summarize the playlist into a feature vector. We can find similar tracks by vectoring each song in our dataset and grab those most similar and recommend them to our user.
 
 Our user, that we explored from the mpd dataset liked artists like Justin Bieber, Ed Sheeran and Ben Rector got recommended the following tracks as a result of our content-based recommender.
@@ -92,6 +93,7 @@ We would like to conclude that this content-based recommender works rather well 
 
 ## Spotify Collaborative Filtering
 *See notebook: collaborative_based.ipynb*
+
 Earlier we did a basic collaborative recommender. We want to expand upon the collaborative filtering and use similar techniques, like vectors from the content filter, this means we can go back to purely using the mpd dataset.
 
 When collaborativly filtering you can make it user-based or, intresstingly, item-based, basing our recommender on Joel Grus systems from [Data Science from Scratch, 2nd Edtion](https://www.oreilly.com/library/view/data-science-from/9781492041122/), we have built one final recommender that can do either type on a playlist basis.
