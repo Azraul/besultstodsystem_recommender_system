@@ -3,24 +3,24 @@
 
 - [Code](https://github.com/rn5l/rsc18)
 
-This team's approach, hereafter refered to as their teamname KAENEN, used a hybrid system of conceptually simple algorithms to produce accurate predictions. KAENEN placed 7th in the main competition and 3rd in the creative sidetrack, out of a 100 teams.
-Their hybrid method uses and combines variations of nearest-neighbor, matrix factorization and string matching algorithms to achieve accuracies just 5-7% lower than that of the winners of the competition.
+This team's approach, hereafter referred to by their team name KAENEN, used a hybrid system of conceptually simple algorithms to produce accurate predictions. KAENEN placed 7th in the main competition and 3rd in the creative sidetrack, out of 100 teams.
+Their hybrid method uses and combines variations of nearest-neighbour, matrix factorization and string matching algorithms to achieve accuracies just 5-7% lower than that of the winners of the competition.
 Their approach shows that you can achieve good accuracy without having to use more complex methods such as deep learning and without specialized hardware like GPU's (which happen to be in a terrible shortage right now!).
 
-What they generally have done is separately trained recommenders such as item-based collaborative filter(similar to what our team achieved), playlist based K nearest neighbour, title matching+matrix factorization, and then combined the results of those recommenders. The combination used depends on what the input type is; for example the playlist name + one seed track results in a combination of title string matching and the combined weighted result of all the item-based recommenders, while an input with 2>= seed tracks will use a weighted combination of the item & playlist based recommenders. The combinations will be explained later on in this article.
+What they generally have done is separately trained recommenders such as item-based collaborative filter(similar to what our team achieved), playlist based K nearest neighbour, title matching+matrix factorization, and then combined the results of those recommenders. The combination used depends on what the input type is; for example, the playlist name + one seed track results in a combination of title string matching and the combined weighted result of all the item-based recommenders, while an input with 2>= seed tracks will use a weighted combination of the item & playlist based recommenders. The combinations will be explained later on in this article.
 
 For their creative track, they used the same hybrid method, but additionally retrieved song metadata from the Spotify API to aid in finding track similarities.
 
 ### Dictionary
-- Session-based = Only input is a playlist name or a set of songs. Called "session" because there is no longer term information about the user to base the recommendations off of.
+- Session-based = Only input is a playlist name or a set of songs. Called "session" because there is no longer term information about the user to base the recommendations off on.
 
 ## Data Prep
-Maybe not even needed? It's good filler tho
+Maybe not even needed? It's good filler though
 
 ## The Different Methods
 In their final solution, KAENEN implemented 6 techniques to calculate the recommendations:
 - Item-based Collaborative Filtering (item-cf)
-- Session-based Nearest Neighbors (s-knn)
+- Session-based Nearest Neighbours (s-knn)
 - IDF Extension (idf-knn)
 - Matrix Factorization (als-mf)
 - String Matching (string-match)
@@ -61,7 +61,7 @@ Item-based collaborative filtering calculates the similarity of one item to all 
 
 *Item-based binary vector visualized*
 
-The similarity of the tracks can then be computed using cosine similarity (the dot product of two track's vectors square rooted and divided and stuff).
+The similarity of the tracks can then be computed using cosine similarity (the dot product of two track's vectors square rooted and divided etc. etc.).
 
 These similarity scores are then simply added together to produce a list of similar tracks.
 
@@ -97,13 +97,13 @@ res['confidence'] += getattr(self, self.weighting)( res['tmp'].fillna(0), i + 2 
 
 
 
-### Session-based Nearest Neighbors (s-knn)
-Session-based, or playlist based nearest neighbors is a collaborative filter very similar to the item-based approach mentioned above.
+### Session-based Nearest Neighbours (s-knn)
+Session-based, or playlist based nearest neighbours is a collaborative filter very similar to the item-based approach mentioned above.
 Instead of drawing similarities between tracks and where they appear in playlists, s-knn looks at playlists and which other playlists also contain the same songs.
 
 Cosine similarity is used to compute the playlists' relations, and IDF is used again to give more weight to the less popular tracks.
 
-This approach gains its "nearest neighbors" name by only comparing the `m` latest edited sessions/playlists to the supplied playlist. According to the writers, using m=5000 did not decrease accuracy, and rather even improved Spotify's *Clicks* metric.
+This approach gains its "nearest neighbours" name by only comparing the `m` latest edited sessions/playlists to the supplied playlist. According to the writers, using m=5000 did not decrease accuracy, and rather even improved Spotify's *Clicks* metric.
 
 
 |   | Track 1  |  Track 2 | Track 3  |
@@ -149,7 +149,7 @@ if count_num_neighbours<=num_neighbours:
 ```
 *The algo in action. Multiplies the tf-idf value with similarity and sets that to the item's score*
 
-Again, nearest neighbors are used again for the similarity computation, and here they noted that m = 1000 produced the best results.
+Again, nearest neighbours are used again for the similarity computation, and here they noted that m = 1000 produced the best results.
 
 ### Matrix Factorization (als-mf)
 
@@ -179,7 +179,7 @@ With matrix factorization, the track similarities are computed as the dot produc
 ### String Matching (string-match)
 
 String matching is used on the playlist's names simply to find playlists with the most similar name to the input. Tracks from the most similar name will be recommended.
-To get more hits, the names are normalized using stemming. Stemming means that a word gets cut to its "root" form from which other words are constructed. For example "cats" will be stemmed to "cat", and "computers" get stemmed to "comput".
+To get more hits, the names are normalized using stemming. Stemming means that a word gets cut to its "root" form, from which other words are constructed. For example "cats" will be stemmed to "cat", and "computers" get stemmed to "comput".
 
 ### Title Factorization (title-mf)
 
@@ -187,7 +187,7 @@ Title-mf seems to use matrix factorization in order to find correlations between
 
 The matrix is cold-started similarly to als-mf, with the playlist names counting as "users" and guessing a latent type based on the implicit choice of tracks the "user" contains.
 
-Instead of matching to just one (the most similar) playlist, title-mf uses the k-most similar names, counts the occurence of each track in these playlists, and then multiplies them by the playlist's similarity.
+Instead of matching to just one (the most similar) playlist, title-mf uses the k-most similar names, counts the occurrence of each track in these playlists, and then multiplies them by the playlist's similarity.
 
 ## Hybridization
 
@@ -230,7 +230,7 @@ for k, v in algs.items():
 
 The final solution they entered MPD challenge with used two approaches:
 - Weighted - Two or more of the methods were combined and weighted to produce recommendations. The flow is illustrated by the green squares in the diagram.
-- Switching - The model uses different combinations of weighted methods depending on the amount of seed tracks and playlist name. The best results were obtained with:
+- Switching - The model uses different combinations of weighted methods depending on the number of seed tracks and playlist name. The best results were obtained with:
     - Name only: Weighed combinations of string-match and title-mf
     - More than two tracks: Weighed combination of track-based methods.
     - Name and one track: Weighed combination of both the name-only and track-based hybrids.
@@ -246,8 +246,8 @@ The final solution they entered MPD challenge with used two approaches:
 
 Their switch model scored only 5-7% lower than the challenge winners, impressive considering the "simple" and well-known methods that have been described in this article. Each technique have their own strengths & weaknesses, and the team has managed to leverage the strength of the methods to cover for each other's weaknesses.
 
-For example item-cf is accurate when it comes to predicting the correct tracks, it scores low on the Clicks metric because the predictions are not ending up in the top of the list.
-However s-knn scores the correct tracks higher up in its list even though it itself has weaker overall recommendations.
+For example, item-cf is accurate when it comes to predicting the correct tracks, it scores low on the Clicks metric because the predictions are not ending up in the top of the list.
+However, s-knn scores the correct tracks higher up in its list even though it itself has weaker overall recommendations.
 
 ## Discussion
 
@@ -256,4 +256,4 @@ This paper was a positive insight since it shows value in learning these traditi
 It was interesting to find out our suspicion that item-cf biases towards more popular tracks among the playlists, and we were speculating as well to use IDF to scale their emphasis down. Although applying IDF to our own solution would most likely make the computation incredibly slow, since we aren't using any external libraries.
 Which is another insight, their project did not seem to use any advanced libraries for item-cf/k-nn either! All we discovered was the use of Pandas dataframes. They seem to be way more efficient & fast than what the eye might judge!
 
-We must say that while the flow of their project on GitHub was very understandable, their code was difficult to follow because of almost non-existant code comments, and cryptic variable names...
+We must say that while the flow of their project on GitHub was very understandable, their code was difficult to follow because of almost non-existent code comments, and cryptic variable names; A mistake we will try to avoid in our studies.
