@@ -8,7 +8,7 @@
 
 [Teacher notebook](https://observablehq.com/@sandravizmad/final-project "observable.com")
 
-[Our notebook](https://observablehq.com/d/395d99ab133e93f2, "observable.com")
+[Our notebook](https://observablehq.com/d/395d99ab133e93f2 "observable.com")
 
 [Video presentation](https://www.youtube.com/watch?v=1Dbt06eaQzI)
 
